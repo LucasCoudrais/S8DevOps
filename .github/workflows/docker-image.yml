@@ -1,0 +1,37 @@
+# define job to build and publish docker image
+build-and-push-docker-image:
+ needs: test-backend
+ # run only when code is compiling and tests are passing
+ runs-on: ubuntu-22.04
+
+ # steps to perform in job
+ steps:
+   - name: Checkout code
+     uses: actions/checkout@v2.5.0
+
+   - name: Build image and push backend
+     uses: docker/build-push-action@v3
+     with:
+       # relative path to the place where source code with Dockerfile is located
+       context: ./TP1/simple-api-student-main
+       # Note: tags has to be all lower-case
+       tags:  lvcascds/tp-devops/simple-api
+
+   - name: Build image and push database
+       # DO the same for database
+      uses: docker/build-push-action@v3
+      with:
+        # relative path to the place where source code with Dockerfile is located
+        context: ./TP1/db
+        # Note: tags has to be all lower-case
+        tags:  lvcascds/tp-devops/database
+
+   - name: Build image and push httpd
+     # DO the same for httpd
+      # DO the same for database
+      uses: docker/build-push-action@v3
+      with:
+        # relative path to the place where source code with Dockerfile is located
+        context: ./TP1/httpd
+        # Note: tags has to be all lower-case
+        tags:  lvcascds/tp-devops/httpd
