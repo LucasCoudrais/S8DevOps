@@ -117,3 +117,19 @@ spring:
 ![alt text](/TP1/img/java-db-api-custom.png)
 </br>
 
+## HTTP serve
+- Récupération de la correction pour cette partie
+
+## Docker compose
+- On met en place une architecture semblable à celle de la correction avec nos fichiers avec du coup :
+- - un dossier pour la db (le notre)
+- - un dossier pour l'api (le notre)
+- - un dossier pour l'httpd (correction)
+
+- On prend le même docker compose que la correction
+- On adapte certaine conf à notre contexte et notre projet notammenr 
+- - `build: ./simple-api-student-main` dans le premier service
+- - Et on change dans le conf du http les adresses de proxy car nous on les a forcé a 8081 donc elles doivent correspondre.
+- Puis on supprime toutes nos images et nos container.
+- Puis on run la commande `docker compose build` qui va créé toutes les images
+- Puis la commande `docker compose up` qui elle va créé tous les conteneurs.
