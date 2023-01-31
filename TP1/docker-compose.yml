@@ -1,0 +1,34 @@
+version: '3.3'
+services:
+  backend:
+    container_name: backend
+    build: ./simple-api-student-main
+    networks:
+      - app-network
+    depends_on:
+      - database
+
+  database:
+    container_name: database
+    restart: always
+    build: ./db
+    networks:
+      - app-network
+
+  httpd:
+    container_name: reverse_proxy
+    build: ./httpd
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+
+volumes:
+  my_db_volume:
+    driver: local
+
+networks:
+  app-network:
+
+
