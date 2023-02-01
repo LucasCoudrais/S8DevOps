@@ -42,17 +42,7 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: ./TP1/simple-api-student-main
           # Note: tags has to be all lower-case
-          tags:  lvcascds/tp-devops/simple-api
-
-
-
-      - name: Build image and push backend
-        uses: docker/build-push-action@v3
-        with:
-          # relative path to the place where source code with Dockerfile is located
-          context: ./TP1/simple-api-student-main
-          # Note: tags has to be all lower-case
-          tags:  lvcascds:simple-api
+          tags:  lvcascds/tp-devops:simple-api
           # build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
 
@@ -63,7 +53,7 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: ./TP1/db
           # Note: tags has to be all lower-case
-          tags:  lvcascds:database
+          tags:  lvcascds/tp-devops:database
           # build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
 
@@ -74,6 +64,6 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: ./TP1/httpd
           # Note: tags has to be all lower-case
-          tags:  lvcascds:httpd
+          tags:  lvcascds/tp-devops:httpd
           # build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
