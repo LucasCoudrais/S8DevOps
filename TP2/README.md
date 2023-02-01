@@ -4,7 +4,8 @@
 - Je le clone sur mon poste 
 - Je met dedans tous mes fichiers que j'ai fait pendant le TP1 et tout le nécéssaire au bon déroulement du docker compose
 
-# Ajout de la première pipeline
+# First step in CI
+Le but étant d'avoir une vérification en continu du bon déroulement et de la bonne exécution afin de se rendre compte au plus vite des erreurs. C'est l'intégration continue. On utilise git action pour lancer des pipeline de build et de test à chaque push sur une branche.
 - Ajout d'un fichier main.xml dans un dossier .gihut/workflows/ à la racine du repo
 ``` yml
 name: CI devops 2023
@@ -35,3 +36,68 @@ jobs:
 - Le fichier est lancé à chaque push sur la branche main
 - On ajoute l'utilisation d'une action java 17
 - Le fichier représente une pipeline qui exécute la commande `mvn clean verify` pour build notre app. Le fichier main.xml est exécuté dans github comme s'il était éxécuté à partir de la racine. Donc on met un path pour aller chercher notre .xml à partir de la racine.
+![alt text](/TP2/img/test-job.PNG)
+
+# First step in CD
+Il est aussi important de faire en sorte que notre code se déploie continuellemnt à chaque push sur une branche. Notre but est de faire comme un docker compose afin d'avoir nos images à partir des Dockerfile. C'est notre déploiement continu, voici le job qu'on va rajouter à notre main.yml
+
+```yml
+# define job to build and publish docker image
+  build-and-push-docker-image:
+    needs: test-backend
+    # run only when code is compiling and tests are passing
+    runs-on: ubuntu-22.04
+
+    # steps to perform in job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.5.0
+
+      - name: Login to DockerHub
+        run: docker login -u lvcascds -p dckr_pat_Wcop_UGAQ8T7XGrfDs0BqkvPBcQ
+
+      - name: Build image and push backend
+        uses: docker/build-push-action@v3
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: ./TP1/simple-api-student-main
+          # Note: tags has to be all lower-case
+          tags:  lvcascds/tp-devops:simple-api
+          # build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build image and push database
+        # DO the same for database
+        uses: docker/build-push-action@v3
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: ./TP1/db
+          # Note: tags has to be all lower-case
+          tags:  lvcascds/tp-devops:database
+          # build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build image and push httpd
+        # DO the same for httpd
+        uses: docker/build-push-action@v3
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: ./TP1/httpd
+          # Note: tags has to be all lower-case
+          tags:  lvcascds/tp-devops:httpd
+          # build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
+```
+Pour que ça marche coté dockerhub :
+- Création d'un compte dockerhub avec le username
+- Génération dun token qu'on ajoute à l'endroit de la connexion
+- On ajoute un repo `tp-devops` à notre docker hub puis on est prêt à faire tourner notre nouveau job dans la pipeline
+Ce que fait notre nouveau job : 
+- Se connecte à docker hub
+- Pour les 3 étapes d'après : 
+- - Se base le dossier ou se trouve les Dockerfile
+- - Utilise les actions de build de docker
+- - génère une image dans le repo `tp-devops` avec un tag prore à l'image
+  ![alt text](/TP2/img/pipeline.PNG)
+    ![alt text](/TP2/img/job.PNG)
+      ![alt text](/TP2/img/dockerhub.PNG)
