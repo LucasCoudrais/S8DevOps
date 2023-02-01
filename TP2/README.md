@@ -98,6 +98,16 @@ Ce que fait notre nouveau job :
 - - Se base le dossier ou se trouve les Dockerfile
 - - Utilise les actions de build de docker
 - - génère une image dans le repo `tp-devops` avec un tag prore à l'image
-  ![alt text](/TP2/img/pipeline.PNG)
-    ![alt text](/TP2/img/job.PNG)
-      ![alt text](/TP2/img/dockerhub.PNG)
+![alt text](/TP2/img/pipeline.PNG)
+![alt text](/TP2/img/job.PNG)
+![alt text](/TP2/img/dockerhub.PNG)
+
+# Setup Quality Gate
+
+- Création d'un compte sonarCloud à partir de github
+- On lie le repo de notre github dans sonarCloud pour créer notre organisation
+- Génération d'un token de connexion à partir de notre compte.
+- On remplace la ligne de run de Maven par la ligne donnée dans l'énoncé en remplaçant certaines valeurs par nos données, ce qui nous donne la commande suivante : `mvn -B verify sonar:sonar -Dsonar.projectKey=LucasCoudrais_S8DevOps -Dsonar.organization=lucascoudrais -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=a3e9c30740f5c476564a95cea2f8be433910e2b8  --file ./TP1/simple-api-student-main/pom.xml`
+- On push pour lancer la nouvelle pipeline avec notre nouveau main.
+- On voit maintenant notre analyse de qualité du code dans Sonarcloud (avec le code coverage et les duplications exprimés en pourcentage par exemple).
+![alt text](/TP2/img/Sonar.PNG)
