@@ -7,3 +7,5 @@
     image: lvcascds/tp-devops:httpd
     networks:
       - name: app-network
+    ports: 
+      - 80:80
