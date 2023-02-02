@@ -126,3 +126,50 @@ mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-galaxy init role
 mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-galaxy init roles/launch_proxy
 - Role roles/launch_proxy was created successfully
 ```
+
+```
+mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-playbook -i inventories/setup.yml playbook.yml
+
+PLAY [all] *************************************************************************************************************************************************************
+
+TASK [docker : Install device-mapper-persistent-data] ******************************************************************************************************************
+ok: [mohamed.benyoub.takima.cloud]
+
+TASK [docker : Install lvm2] *******************************************************************************************************************************************
+ok: [mohamed.benyoub.takima.cloud]
+
+TASK [add repo docker] *************************************************************************************************************************************************
+[WARNING]: Consider using 'become', 'become_method', and 'become_user' rather than running sudo
+changed: [mohamed.benyoub.takima.cloud]
+
+TASK [docker : Install Docker] *****************************************************************************************************************************************
+ok: [mohamed.benyoub.takima.cloud]
+
+TASK [docker : install python3] ****************************************************************************************************************************************
+ok: [mohamed.benyoub.takima.cloud]
+
+TASK [docker : Pip install] ********************************************************************************************************************************************
+ok: [mohamed.benyoub.takima.cloud]
+
+TASK [docker : Make sure Docker is running] ****************************************************************************************************************************
+ok: [mohamed.benyoub.takima.cloud]
+
+TASK [docker_create_network : Create a network] ************************************************************************************************************************
+ok: [mohamed.benyoub.takima.cloud]
+
+TASK [launch_database : Create db container and connect to network] ****************************************************************************************************
+[DEPRECATION WARNING]: Please note that docker_container handles networks slightly different than docker CLI. If you specify networks, the default network will still 
+be attached as the first network. (You can specify purge_networks to remove all networks not explicitly listed.) This behavior will change in Ansible 2.12. You can 
+change the behavior now by setting the new `networks_cli_compatible` option to `yes`, and remove this warning by setting it to `no`. This feature will be removed in 
+version 2.12. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+ok: [mohamed.benyoub.takima.cloud]
+
+TASK [launch_app : Create app container and connect to network] ********************************************************************************************************
+changed: [mohamed.benyoub.takima.cloud]
+
+TASK [launch_proxy : Create proxy container and connect to network] ****************************************************************************************************
+changed: [mohamed.benyoub.takima.cloud]
+
+PLAY RECAP *************************************************************************************************************************************************************
+mohamed.benyoub.takima.cloud : ok=11   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+```
