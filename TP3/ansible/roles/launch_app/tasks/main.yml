@@ -1,0 +1,11 @@
+---
+# tasks file for roles/launch_app
+
+- name: Create app container and connect to network
+  docker_container:
+    name: simple-api
+    image: lvcascds/tp-devops:simple-api
+    networks:
+      - name: app-network
+    ports: 
+      - 8081
