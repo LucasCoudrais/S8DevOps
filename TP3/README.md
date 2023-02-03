@@ -1,6 +1,5 @@
-
+# Set-up Ansible
 Notre setup.yml : 
-
 ```yml
 all:
  vars:
@@ -47,8 +46,10 @@ mohamed.benyoub.takima.cloud | SUCCESS => {
     "rc": 0, 
     "results": []
 }
-mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ 
 ```
+On arrive bien à se connecter et à intéragir avec notre centOS AWS grace à ansible
+# Playbook
+## Test de connexion
 Notre playbook.yml
 ```yml
 - hosts: all
@@ -71,7 +72,53 @@ ok: [mohamed.benyoub.takima.cloud]
 PLAY RECAP *************************************************************************************************************************************************************
 mohamed.benyoub.takima.cloud : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
-Changement de notre playbook puis relance le commande précédente : 
+## Première installation de docker
+Notre playbook.yml
+```yml
+- hosts: all
+  gather_facts: false
+  become: yes
+
+# Install Docker
+  tasks:
+  - name: Clean packages
+    command:
+      cmd: dnf clean -y packages
+
+  - name: Install device-mapper-persistent-data
+    dnf:
+      name: device-mapper-persistent-data
+      state: latest
+
+  - name: Install lvm2
+    dnf:
+      name: lvm2
+      state: latest
+
+  - name: add repo docker
+    command:
+      cmd: sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+
+  - name: Install Docker
+    dnf:
+      name: docker-ce
+      state: present
+
+  - name: install python3
+    dnf:
+      name: python3
+
+  - name: Pip install
+    pip:
+      name: docker
+
+  - name: Make sure Docker is running
+    service: name=docker state=started
+    tags: docker
+```
+On exécute une liste de tache donnée pour installer docker sur notre centOS.
+
+Résultat : 
 ``` bash
 mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-playbook -i inventories/setup.yml playbook.yml
 
@@ -107,16 +154,19 @@ changed: [mohamed.benyoub.takima.cloud]
 PLAY RECAP *************************************************************************************************************************************************************
 mohamed.benyoub.takima.cloud : ok=8    changed=8    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
 ```
+Chaque ligne représente l'exécution d'une tache, si la tache à déjé été faite le statut sera à `ok` et pas `changed` ainsi, ansible va optimiser et ne pas relancer des taches déjà exécuté, sauf si elles ont changé. 
+Maintenant le but est d'installer notre appli sur notre cent os entièrement avec ansible. Ainsi nous allons devoir rajouter un bon nombre de tache consistant à : 
+- intaller docker
+- créer un réseau pour que nos conteneur puissent communiquer
+- installer la base de donnée depuis notre image sur notre docker hub
+- installer de la meme manière notre backend 
+- installer notre httpd 
 
+
+## Découpage de nos taches en roles
 ```
 mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-galaxy init roles/docker
-
 - Role roles/docker was created successfully
-```
-
-Ensuite on crée tout les roles dont on a besoin : 
-
-```
 mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-galaxy init roles/docker_create_network
 - Role roles/docker_create_network was created successfully
 mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-galaxy init roles/launch_database
@@ -126,7 +176,11 @@ mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-galaxy init role
 mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-galaxy init roles/launch_proxy
 - Role roles/launch_proxy was created successfully
 ```
-
+Puis, dans chaque role nous allons exéctuer des taches ansible pour faire ce que l'on veut. Ensuite dans notre `playbook.yml` nous allons appeller l'ensemble de nos role dans un ordre voulu. Le but étant que à l'éxécution de notre playbook : nous allons déployer nos conteneur docker à partir de nos image sur docker hub du TP d'avant directement sur notre instance centOS
+```
+Voir le fichier playbook.yml et tous les main.yml qui se situent dans chaque dossier tasks de tous nos roles
+```
+Avec nos fichiers, nous obtenons donc le résultat suivant à l'éxécution de notre playbook :
 ```
 mohamed.benyoub@tpc30:~/Documents/S8DevOps/TP3/ansible$ ansible-playbook -i inventories/setup.yml playbook.yml
 
@@ -173,3 +227,6 @@ changed: [mohamed.benyoub.takima.cloud]
 PLAY RECAP *************************************************************************************************************************************************************
 mohamed.benyoub.takima.cloud : ok=11   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
 ```
+
+Puis nous pouvons bien voir que nous avons accès à notre API à travers notre reverse proxy qui est bien lié a notre BDD en allant sur le domaine de notre instance centOS : 
+![alt text](/TP3/img/Capture%20d%E2%80%99%C3%A9cran%20de%202023-02-02%2017-49-28.png)
