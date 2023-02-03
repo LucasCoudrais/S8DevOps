@@ -1,6 +1,9 @@
 ---
 # tasks file for roles/launch_app
 
+# On créé un conteneur appelé backend (afin de matcher avec notre http) en se basant sur notre image simple-api publique sur dockerhub
+# Puis on fait notre redirection de port pour rendre accessible notre appli qui tourne dans docker
+# Puis on met notre conteneur dans notre network créé par un autre role
 - name: Create app container and connect to network
   docker_container:
     name: backend

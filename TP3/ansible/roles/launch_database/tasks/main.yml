@@ -1,6 +1,9 @@
 ---
 # tasks file for roles/launch_database
 
+# On créé un conteneur appelé database en se basant sur notre image database publique sur dockerhub
+# Puis on met notre conteneur dans notre network créé par un autre role
+# Puis on met des variable d'environnement pour configurer nos informations de login à notre DB
 - name: Create db container and connect to network
   docker_container:
     name: database

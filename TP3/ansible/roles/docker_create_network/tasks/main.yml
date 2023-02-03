@@ -1,6 +1,7 @@
 ---
 # tasks file for roles/docker_create_network
 
+#Création d'un network appellé "app-network" afin d'y mettre nos containers pour qu'ils puissent communiquer entre eux
 - name: Create a network
   docker_network:
     name: app-network    

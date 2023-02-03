@@ -1,10 +1,14 @@
-# Question 2.1 
+### 2-1 What are testcontainers?
 
 Ce sont des bibliothèques Java qui vous permettent d'exécuter un ensemble de conteneurs Docker pendant les tests.
 
-# Question 2.2 et 2.3
+### 2-2 Document your Github Actions configurations.
 
-Décrit ci-dessous dans notre compte-rendu.
+Décrit ci-dessous dans nos notes
+
+### 2-2 Document your quality gate configuration.
+
+Décrit ci-dessous dans nos notes
 
 # Création du github
 - Connexion sur mon compte github

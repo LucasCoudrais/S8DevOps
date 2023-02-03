@@ -1,6 +1,6 @@
 ### 1-1 Document your database container essentials: commands and Dockerfile.
 
-Décrit dans la partie du dessous.
+Décrit dans les notes d'en dessous
 
 ### 1-2 Why do we need a multistage build? And explain each step of this dockerfile.
 
@@ -10,14 +10,20 @@ Le multistage build permet de mettre deux dockerfiles en un. La première étape
 
 Une fois que l'on a nos executables, on peut ensuite les lancer avec la deuxième étape du dossier. 
 
-### 1-3 Document docker-compose most important commands. 1-4 Document your docker-compose file.
+### 1-3 Document docker-compose most important commands. 
 
 `docker compose build` est une commande qui permet de créer toutes les images, conformément à ce qui est indiqué dans le fichier docker-compose.yml
 
 `docker compose up` est une commande qui permet de créer tous les conteneurs en fonction des images construites précédement. 
 
-Le fichier docker-compose est expliqué dans les parties du dessous. 
+### 1-4 Document your docker-compose file.
 
+Décrit dans les notes d'en dessous
+
+
+### 1-5 Document your publication commands and published images in dockerhub.
+
+Décrit dans les notes d'en dessous
 
 # Database 
 On créé le Dockerfile suivant 

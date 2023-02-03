@@ -31,6 +31,7 @@
   pip:
     name: docker
 
+# On s'assure que le service docker soit bien démarré 
 - name: Make sure Docker is running
   service: name=docker state=started
   tags: docker

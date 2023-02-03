@@ -1,3 +1,19 @@
+
+### 3-1 Document your inventory and base commands
+
+Décrit ci-dessous dans nos notes
+
+
+### 3-2 Document your playbook
+
+Décrit ci-dessous dans nos notes
+
+
+### Document your docker_container tasks configuration.
+
+Fait avec les commentaires dans tous nos fichiers de tasks
+
+
 # Set-up Ansible
 Notre setup.yml : 
 ```yml
